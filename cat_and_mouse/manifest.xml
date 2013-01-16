@@ -1,0 +1,14 @@
+<package>
+  <description brief="cat_and_mouse">
+
+     cat_and_mouse
+
+  </description>
+  <author>dieesrod</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/cat_and_mouse</url>
+
+</package>
+
+
