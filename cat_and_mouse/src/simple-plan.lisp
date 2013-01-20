@@ -4,14 +4,14 @@
 
 (in-package :cmg)
 
-(def-cram-function move-to (goal-pos &optional (distance-threshold 1.0))
+(def-cram-function move-to-pos (goal &optional (distance-threshold 1.0))
   (let ((reached-fl (< (fl-funcall #'cl-transforms:v-dist
                                    (fl-funcall
                                        #'cl-transforms:translation
                                        (fl-funcall
                                            #'pose-msg->transform
-                                           *cat-pose-2*))
-                                   goal-pos)
+                                           *cat-pose*))
+                                   goal)
                         distance-threshold)))
     (unwind-protect
          (pursue
@@ -19,7 +19,7 @@
            (loop do
              (send-vel-cmd
                1.5
-               (calculate-cat-angular-vel goal-pos))
+               (calculate-cat-angular-vel goal))
              (wait-duration 0.1)))
       (send-vel-cmd 0 0)))
 )
@@ -30,7 +30,7 @@
                                        #'cl-transforms:translation
                                        (fl-funcall
                                            #'pose-msg->transform
-                                           *cat-pose-2*))
+                                           *cat-pose*))
                                    goal)
                         distance-threshold)))
     (unwind-protect
@@ -44,33 +44,13 @@
       (send-vel-cmd 0 0)))
 )
 
-(def-cram-function go-to-2 (goal &optional (distance-threshold 1.0))
-  ;;(let ((reached-fl (< (fl-funcall #'cl-transforms:v-dist
-  ;;                               (fl-funcall
-  ;;                                #'cl-transforms:translation
-  ;;                                (fl-funcall
-  ;;                                 #'pose-msg->transform
-  ;;                                 *cat-pose-2*))
-  ;;                               goal)
-  ;;                   distance-threshold)))
-    (unwind-protect
-         (pursue
-           ;;(wait-for reached-fl)
-           (loop do
-             (send-vel-cmd
-               1.5
-               (calculate-cat-angular-vel (value goal)))
-             (wait-duration 0.1));;)
-      (send-vel-cmd 0 0)))
-)
-
-(def-cram-function follow-mouse (&optional (distance-threshold 5.0))
+(def-cram-function follow-mouse-2 (&optional (distance-threshold 5.0))
   (let ((reached-fl (< (fl-funcall #'cl-transforms:v-dist  
                                     (fl-funcall
                                         #'cl-transforms:translation
                                         (fl-funcall
                                             #'pose-msg->transform
-                                            *cat-pose-2*))
+                                            *cat-pose*))
                                     (fl-funcall
                                         #'cl-transforms:translation
                                         (fl-funcall
@@ -79,6 +59,25 @@
                        distance-threshold)))
     (unwind-protect
          (pursue
+           (loop do
+
+             (format t "~a~%" (value *mouse-pose*) )
+             (format t "~a~%" (value *cat-pose*) )
+                                                     
+             (format t "~a~%" (value (fl-funcall #'cl-transforms:v-dist  
+                                    (fl-funcall
+                                        #'cl-transforms:translation
+                                        (fl-funcall
+                                            #'pose-msg->transform
+                                            *cat-pose*))
+                                    (fl-funcall
+                                        #'cl-transforms:translation
+                                        (fl-funcall
+                                            #'pose-msg->transform
+                                            *mouse-pose*)) ))
+             )
+           )
+           
            (wait-for reached-fl)
            (loop do
              (send-vel-cmd
@@ -89,13 +88,13 @@
       (send-vel-cmd 0 0)))
 )
 
-(def-cram-function follow-mouse-2 (&optional (distance-threshold 5.0))
+(def-cram-function follow-mouse (&optional (distance-threshold 5.0))
   (let ((reached-fl (< (fl-funcall #'cl-transforms:v-dist  
                                     (fl-funcall
                                         #'cl-transforms:translation
                                         (fl-funcall
                                             #'pose-msg->transform
-                                            *cat-pose-2*))
+                                            *cat-pose*))
                                     (fl-funcall
                                         #'cl-transforms:translation
                                         (fl-funcall
