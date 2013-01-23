@@ -10,3 +10,6 @@ msg_gen/
 srv_gen/
 *~
 *.pyc
+
+CMakeCache.txt
+Makefile
