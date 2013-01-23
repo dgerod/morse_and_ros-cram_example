@@ -1,0 +1,14 @@
+.cproject
+.project
+.pydevproject
+CMakeFiles
+cmake_install.cmake
+build/
+bin/
+lib/
+msg_gen/
+srv_gen/
+*~
+*.pyc
+
+CMakeCache.txt
