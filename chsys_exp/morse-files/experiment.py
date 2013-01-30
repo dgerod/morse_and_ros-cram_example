@@ -1,14 +1,8 @@
 from math import pi
 import random
+
 from morse.builder import *
-
-# 
-# --------------------------------------------------------
-
-sim_dir = '/home/dieesrod/Workspaces/ROS/fuerte/sandbox/chsys_exp/morse-files'
-objects_dir = sim_dir + '/' + 'objects';
-robots_dir = sim_dir + '/' + 'robots';
-scenario_dir = sim_dir + '/' + 'scenario';
+from morse_local_cfg import scenario_dir, robots_dir, objects_dir 
 
 # Create a new ATRV robot, and change its name to MOUSE
 # --------------------------------------------------------
@@ -50,7 +44,7 @@ Cat.append(Keyb)
 # Camera on the top of the scene
 # --------------------------------------------------------
 
-videoCam = Robot( robots_dir + '/' + 'vcam2.blend')
+videoCam = Robot( robots_dir + '/' + 'vcam.blend')
 videoCam.name = 'VCAM'
 #camera = Sensor('video_camera')
 camera = Sensor('semantic_camera')
@@ -73,13 +67,15 @@ camera.configure_mw('ros')
 # We add some objects in the scene
 # --------------------------------------------------------
 
-for i in range(3):
+for i in range(5):
 
     box = PassiveObject( objects_dir + '/' + 'boxes.blend','RedBox')    
     box.translate( x=random.uniform(-10.0, 10.0),
                      y=random.uniform(-10.0, 10.0),
                      z=1.0000 )
     box.rotate( z=random.uniform(-pi,+pi) )
+    
+    #box.properties(Object = True, Graspable = False, Label = "BOX")
 
 # And finally we complete the scene configuration:
 # ----------------------------------------------------------
@@ -88,5 +84,4 @@ env = Environment( scenario_dir + '/' + 'empty_world.blend')
 
 env.place_camera([10.0, -10.0, 10.0])
 env.aim_camera([1.0470, 0, 0.7854])
- 
 
