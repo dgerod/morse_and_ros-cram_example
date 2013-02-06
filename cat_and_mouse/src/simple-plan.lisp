@@ -25,7 +25,9 @@
       (send-vel-cmd 0 0)))
 )
 
-(def-cram-function go-to (goal &optional (distance-threshold 1.0))
+;;; ---------------------------------------------------------------------------
+
+(def-cram-function go-to (goal &optional (distance-threshold 2.0))
   "Plan to follow a goal defined as a fluent"
   (let ((reached-fl (< (fl-funcall #'cl-transforms:v-dist
                                    (fl-funcall
@@ -46,7 +48,7 @@
       (send-vel-cmd 0 0)))
 )
 
-(def-cram-function follow-mouse (&optional (distance-threshold 5.0))
+(def-cram-function follow-mouse (&optional (distance-threshold 2.0))
   "Plan to follow the mouse"
   (let ((reached-fl (< (fl-funcall #'cl-transforms:v-dist  
                                     (fl-funcall
