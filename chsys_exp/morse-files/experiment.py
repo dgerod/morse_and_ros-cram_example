@@ -2,81 +2,94 @@ from math import pi
 import random
 
 from morse.builder import *
-from morse_local_cfg import scenario_dir, robots_dir, objects_dir 
+from morse_local_cfg import scenario_dir, robots_dir, objects_dir, mw_dir
 
-# Create a new ATRV robot, and change its name to MOUSE
-# --------------------------------------------------------
-
-mouse = Robot('atrv')
-mouse.name = "MOUSE"
-mouse.translate (x=1.0, z=0.2)
-
-Pose1 = Sensor('pose')
-Pose1.translate(x=-0.2000, z=0.9000)
-mouse.append(Pose1)
-
-# Next we make it controllable by the keyboard, using the correct actuator. 
-# Also, we change the default speed, to make it more agile
-Keyb = Actuator('keyboard')
-Keyb.properties(Speed=3.0)
-mouse.append(Keyb)
-
-# Add properties so the mouse can be recognized by semantic camera sensors
-mouse.properties(Object = True, Graspable = False, Label = mouse.name)
+from morse.builder.creator import SensorCreator
 
 # Create another ATRV robot and set its name to CAT
 # ----------------------------------------------------
 
-Cat = Robot('atrv')
-Cat.name = "CAT"
-Cat.translate(x=-6.0, z=0.2)
+cat = Robot('atrv')
+cat.name = "CAT"
+cat.properties(Object = True, Graspable = False, Label = cat.name)
+cat.translate(x=-6.0, z=0.2)
 
-Pose2 = Sensor('pose')
-Pose2.translate(x=-0.2000, z=0.9000)
-Cat.append(Pose2)
+pose = Sensor('pose')
+pose.translate(x=-0.2000, z=0.9000)
+cat.append(pose)
+
+#buper1 = SensorCreator('Bumper', robots_dir + "/" + "bumper", "BumperClass", 
+#                        robots_dir + "/" + "Bumper")
+
+bumper1 = Sensor( robots_dir + '/' + 'bumper.blend')
+bumper1.translate(x=0.6, z=0.3)
+
+bumper1.properties(scan_window = 180)
+bumper1.properties(laser_range = 0.5)
+
+cat.append(bumper1)
 
 # Add also a v, omega actuator that will make the robot move:
-V_W = Actuator('v_omega')
-Cat.append(V_W)
+vw = Actuator('v_omega')
+cat.append(vw)
 
-Cat.append(Keyb)
+# Next we make it controllable by the keyboard, using the correct actuator. 
+# Also, we change the default speed, to make it more agile
+keyb = Actuator('keyboard')
+keyb.properties(Speed=3.0)
+cat.append(keyb)
 
 # Camera on the top of the scene
 # --------------------------------------------------------
 
 videoCam = Robot( robots_dir + '/' + 'vcam.blend')
 videoCam.name = 'VCAM'
-#camera = Sensor('video_camera')
-camera = Sensor('semantic_camera')
+camera = Sensor('smart_camera')
 
 videoCam.append(camera)
 
 videoCam.translate(z=20)
 videoCam.rotate(y=pi/2);
 
-# We export the sensors and actuators 
-# --------------------------------------------------------
-
-Pose1.configure_mw('ros')
-
-V_W.configure_mw('ros')
-Pose2.configure_mw('ros')
-
-camera.configure_mw('ros')
-
 # We add some objects in the scene
 # --------------------------------------------------------
 
-for i in range(5):
+for i in range(3):
 
     box = PassiveObject( objects_dir + '/' + 'boxes.blend','RedBox')    
+    box.properties(Type = "BOX")
+    
     box.translate( x=random.uniform(-10.0, 10.0),
-                     y=random.uniform(-10.0, 10.0),
-                     z=1.0000 )
+                   y=random.uniform(-10.0, 10.0),
+                   z=1.0000 )
     box.rotate( z=random.uniform(-pi,+pi) )
     
-    #box.properties(Object = True, Graspable = False, Label = "BOX")
+for i in range(3):
 
+    cylinder = PassiveObject( objects_dir + '/' + 'cylinders.blend','GreenCylinder')
+    cylinder.properties(Type = "CYLINDER")
+            
+    cylinder.translate( x=random.uniform(-10.0, 10.0),
+                        y=random.uniform(-10.0, 10.0),
+                        z=1.0000 )
+    cylinder.rotate( z=random.uniform(-pi,+pi) )
+
+# We export the sensors and actuators through ROS topics
+# --------------------------------------------------------
+
+vw.configure_mw('ros')
+pose.configure_mw('ros')
+
+camera.configure_mw('ros',['ROS','post_string_msg',
+                          'morse/middleware/ros/smart_camera'])
+
+                            
+#camera.configure_mw('ros',['ROS','post_string_msg',
+#                          'morse/middleware/ros/smart_camera'])
+
+#camera.configure_mw('ros', 
+#                    ['ROS','post_object_msg', mw_dir + '/' + 'publish_smart_camera'])
+    
 # And finally we complete the scene configuration:
 # ----------------------------------------------------------
 
