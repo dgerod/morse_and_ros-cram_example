@@ -83,7 +83,7 @@ front_bumper.configure_mw('ros',
                           ['ROS','post_bumper_msg',mw_dir + 'publish_bumper'])
 
 camera.configure_mw('ros',
-                    ['ROS','post_string_msg',mw_dir + 'publish_smart_camera'])
+                    ['ROS','post_object_msg',mw_dir + 'publish_smart_camera'])
     
 # And finally we complete the scene configuration:
 # ----------------------------------------------------------
