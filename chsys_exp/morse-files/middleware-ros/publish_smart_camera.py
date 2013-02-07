@@ -16,7 +16,7 @@ def init_extra_module(self, component_instance, function, mw_data):
     Prepare the middleware to handle the serialised data as necessary.
     """
     
-    logger.info('######## ROS SMART-CAM PUBLISHER INITIALIZED ######## Begin')
+    logger.info('######## SMART-CAM ros-publisher INIT ######## Begin')
         
     # Compose the name of the port, based on the parent and module names
     component_name = component_instance.blender_obj.name
@@ -28,7 +28,7 @@ def init_extra_module(self, component_instance, function, mw_data):
     # Generate one publisher and one topic for each component that is a sensor and uses post_message
     self._topics.append(rospy.Publisher(parent_name + "/" + component_name, String))
     
-    logger.info('######## ROS SMART-CAM PUBLISHER INITIALIZED ######## End')
+    logger.info('######## SMART-CAM ros-publisher INIT ######## End')
 
     
 def post_string_msg(self, component_instance):

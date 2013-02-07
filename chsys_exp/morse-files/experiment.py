@@ -18,16 +18,16 @@ pose = Sensor('pose')
 pose.translate(x=-0.2000, z=0.9000)
 cat.append(pose)
 
-#buper1 = SensorCreator('Bumper', robots_dir + "/" + "bumper", "BumperClass", 
-#                        robots_dir + "/" + "Bumper")
+#front_bumper = SensorCreator('Bumper', "./" + robots_dir + "bumper", "BumperClass", 
+#                          "./" + robots_dir + "bumper.blend")
 
-bumper1 = Sensor( robots_dir + '/' + 'bumper.blend')
-bumper1.translate(x=0.6, z=0.3)
+front_bumper = Sensor(robots_dir + 'bumper')
+front_bumper.translate(x=0.6, z=0.3)
 
-bumper1.properties(scan_window = 180)
-bumper1.properties(laser_range = 0.5)
+front_bumper.properties(scan_window = 180)
+front_bumper.properties(laser_range = 0.5)
 
-cat.append(bumper1)
+cat.append(front_bumper)
 
 # Add also a v, omega actuator that will make the robot move:
 vw = Actuator('v_omega')
@@ -42,7 +42,7 @@ cat.append(keyb)
 # Camera on the top of the scene
 # --------------------------------------------------------
 
-videoCam = Robot( robots_dir + '/' + 'vcam.blend')
+videoCam = Robot( './robots/' + 'vcam.blend')
 videoCam.name = 'VCAM'
 camera = Sensor('smart_camera')
 
@@ -56,7 +56,7 @@ videoCam.rotate(y=pi/2);
 
 for i in range(3):
 
-    box = PassiveObject( objects_dir + '/' + 'boxes.blend','RedBox')    
+    box = PassiveObject( objects_dir + 'boxes.blend','RedBox')    
     box.properties(Type = "BOX")
     
     box.translate( x=random.uniform(-10.0, 10.0),
@@ -66,7 +66,7 @@ for i in range(3):
     
 for i in range(3):
 
-    cylinder = PassiveObject( objects_dir + '/' + 'cylinders.blend','GreenCylinder')
+    cylinder = PassiveObject( objects_dir + 'cylinders.blend','GreenCylinder')
     cylinder.properties(Type = "CYLINDER")
             
     cylinder.translate( x=random.uniform(-10.0, 10.0),
@@ -79,21 +79,16 @@ for i in range(3):
 
 vw.configure_mw('ros')
 pose.configure_mw('ros')
+front_bumper.configure_mw('ros',
+                          ['ROS','post_bumper_msg',mw_dir + 'publish_bumper'])
 
-camera.configure_mw('ros',['ROS','post_string_msg',
-                          'morse/middleware/ros/smart_camera'])
-
-                            
-#camera.configure_mw('ros',['ROS','post_string_msg',
-#                          'morse/middleware/ros/smart_camera'])
-
-#camera.configure_mw('ros', 
-#                    ['ROS','post_object_msg', mw_dir + '/' + 'publish_smart_camera'])
+camera.configure_mw('ros',
+                    ['ROS','post_string_msg',mw_dir + 'publish_smart_camera'])
     
 # And finally we complete the scene configuration:
 # ----------------------------------------------------------
 
-env = Environment( scenario_dir + '/' + 'empty_world.blend')
+env = Environment( scenario_dir + 'empty_world.blend')
 
 env.place_camera([10.0, -10.0, 10.0])
 env.aim_camera([1.0470, 0, 0.7854])

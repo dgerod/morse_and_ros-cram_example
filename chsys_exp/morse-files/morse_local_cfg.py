@@ -1,7 +1,11 @@
 
-sim_dir = '/home/dieesrod/Workspaces/ROS/fuerte/sandbox/chsys_exp/morse-files'
+import sys
 
-objects_dir = sim_dir + '/' + 'objects';
-robots_dir = sim_dir + '/' + 'robots';
-scenario_dir = sim_dir + '/' + 'scenario';
-mw_dir = sim_dir + '/' + 'middleware-ros';
+workspace_dir = '/home/dieesrod/Workspaces/ROS/fuerte/sandbox/chsys_exp/morse-files'
+sys.path.append( workspace_dir )
+
+objects_dir = 'objects/'
+#robots_dir = 'robots/'
+robots_dir = ''
+scenario_dir = 'scenario/'
+mw_dir = 'middleware-ros/'
